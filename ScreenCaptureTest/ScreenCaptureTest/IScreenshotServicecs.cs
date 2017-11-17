@@ -9,6 +9,6 @@ namespace ScreenCaptureTest
 {
     public interface IScreenshotServicecs
     {
-        Task<byte[]> CaptureAsync(Stream stream);
+        Task<Stream> CaptureAsync(Stream stream);
     }
 }

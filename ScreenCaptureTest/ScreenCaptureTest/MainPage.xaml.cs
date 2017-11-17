@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,9 @@ namespace ScreenCaptureTest
         private async void Button_Clicked(object sender, EventArgs e)
         {
             var stream = await SignatureView.GetImageStreamAsync(SignaturePad.Forms.SignatureImageFormat.Png);
-           var data =  await DependencyService.Get<IScreenshotServicecs>().CaptureAsync(stream);
+            var data = await DependencyService.Get<IScreenshotServicecs>().CaptureAsync(stream);
+            MyImage.Source = ImageSource.FromStream(() => data);
         }
+
     }
 }

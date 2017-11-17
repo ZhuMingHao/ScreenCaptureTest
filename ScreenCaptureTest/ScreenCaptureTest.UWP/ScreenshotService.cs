@@ -23,7 +23,7 @@ namespace ScreenCaptureTest.UWP
 {
     public class ScreenshotService : IScreenshotServicecs
     {
-        public async Task<byte[]> CaptureAsync(Stream Tem)
+        public async Task<Stream> CaptureAsync(Stream Tem)
         {
             var rtb = new RenderTargetBitmap();
             await rtb.RenderAsync(Window.Current.Content);
@@ -45,14 +45,11 @@ namespace ScreenCaptureTest.UWP
             stream.Seek(0);
             var readStram = stream.AsStreamForRead();
 
-
             var pagebitmap = await GetSoftwareBitmap(readStram);
             var softwareBitmap = await GetSoftwareBitmap(Tem);
 
-
             CanvasDevice device = CanvasDevice.GetSharedDevice();
             CanvasRenderTarget renderTarget = new CanvasRenderTarget(device, rtb.PixelWidth, rtb.PixelHeight, 96);
-
 
             using (var ds = renderTarget.CreateDrawingSession())
             {
@@ -63,15 +60,9 @@ namespace ScreenCaptureTest.UWP
                 ds.DrawImage(image);
             }
 
-            return renderTarget.GetPixelBytes();
-
-            //StorageFolder storageFolder = KnownFolders.PicturesLibrary;
-            //var file = await storageFolder.CreateFileAsync("output.jpg", CreationCollisionOption.ReplaceExisting);
-            //using (var fileStream = await file.OpenAsync(FileAccessMode.ReadWrite))
-            //{
-            //    await renderTarget.SaveAsync(fileStream, CanvasBitmapFileFormat.Jpeg, 1f);
-            //}
-
+            InMemoryRandomAccessStream randomAccessStream = new InMemoryRandomAccessStream();
+            await renderTarget.SaveAsync(randomAccessStream, CanvasBitmapFileFormat.Jpeg, 1f);
+            return randomAccessStream.AsStream();
         }
         private async Task<SoftwareBitmap> GetSoftwareBitmap(Stream data)
         {

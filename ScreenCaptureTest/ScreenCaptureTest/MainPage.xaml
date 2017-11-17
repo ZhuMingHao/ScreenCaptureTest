@@ -10,6 +10,7 @@
                 
             </PhoneApplicationPage:SignaturePadCanvasView>
             <Button Text="ClickMe" Clicked="Button_Clicked" />
+            <Image x:Name="MyImage" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
